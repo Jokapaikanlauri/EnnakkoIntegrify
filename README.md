@@ -1,0 +1,1 @@
+npm start niin käynnistyy

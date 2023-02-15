@@ -1,12 +1,10 @@
 const { ENUM } = require("sequelize")
 
-//user model
 module.exports = (sequelize, DataTypes) => {
     const Todo = sequelize.define( "toDo", {
         name: {
             type: DataTypes.STRING,
             unique: true,
-            isEmail: true, //checks for email format
             allowNull: false
         },
         description: {

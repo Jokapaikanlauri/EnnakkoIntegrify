@@ -19,6 +19,7 @@ const sequelize = new Sequelize(`postgres://account:1234@localhost:5432/Integrif
 
 //connecting to model
 db.users = require('./userModel.js') (sequelize, DataTypes)
+db.toDo = require('./toDoModel.js') (sequelize, DataTypes)
 
 //exporting the module
 module.exports = db

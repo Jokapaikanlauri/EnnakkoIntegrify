@@ -3,9 +3,9 @@ const express = require('express')
 const sequelize = require('sequelize')
 const dotenv = require('dotenv').config()
 const cookieParser = require('cookie-parser')
- const db = require('./Models')
- const userRoutes = require ('./Routes/userRoutes')
- 
+const db = require('./Models')
+const userRoutes = require ('./Routes/userRoutes')
+const toDoRoutes = require ('./Routes/toDoRoutes') 
 
 //setting up your port
 const PORT = process.env.PORT || 8080
@@ -24,7 +24,7 @@ db.sequelize.sync({ force: true }).then(() => {
 })
 
 //routes for the user API
-app.use('/api/users', userRoutes)
+app.use('/api/v1', userRoutes, toDoRoutes)
 
 //listening to server connection
 app.listen(PORT, () => console.log(`Server is connected on ${PORT}`))

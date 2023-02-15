@@ -1,47 +1,24 @@
-const config = require("../config/db.config.js");
+//importing modules
+const {Sequelize, DataTypes} = require('sequelize')
 
-const Sequelize = require("sequelize");
-const sequelize = new Sequelize(
-  config.DB,
-  config.USER,
-  config.PASSWORD,
-  {
-    host: config.HOST,
-    dialect: config.dialect,
-    operatorsAliases: false,
+//Database connection with dialect of postgres specifying the database we are using
+//port for my database is 5433
+//database name is discover
+const sequelize = new Sequelize(`postgres://account:1234@localhost:5432/Integrify`, {dialect: "postgres"})
 
-    pool: {
-      max: 5,
-      min: 0,
-      idle: 10000
-    }
-  }
-);
+//checking if connection is done
+    sequelize.authenticate().then(() => {
+        console.log(`Database connected to discover`)
+    }).catch((err) => {
+        console.log(err)
+    })
 
-const authJwt = require("./authJwt");
-const verifySignUp = require("./verifySignUp");
+    const db = {}
+    db.Sequelize = Sequelize
+    db.sequelize = sequelize
 
-module.exports = {
-  authJwt,
-  verifySignUp
-};
+//connecting to model
+db.users = require('./userModel.js') (sequelize, DataTypes)
 
-const db = {};
-
-db.Sequelize = Sequelize;
-db.sequelize = sequelize;
-
-db.toDo = require("../models/toDo.model.js")(sequelize, Sequelize);
-db.user = require("../models/user.model.js")(sequelize, Sequelize);
-
-db.toDo.belongsToMany(db.toDo, {
-  through: "user_roles",
-  foreignKey: "userId",
-});
-db.user.belongsToMany(db.user, {
-  through: "user_roles"
-});
-
-db.ROLES = ["user", "logged"];
-
-module.exports = db;
+//exporting the module
+module.exports = db

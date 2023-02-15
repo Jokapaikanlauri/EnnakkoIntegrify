@@ -1,50 +1,30 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+//importing modules
+const express = require('express')
+const sequelize = require('sequelize')
+const dotenv = require('dotenv').config()
+const cookieParser = require('cookie-parser')
+ const db = require('./Models')
+ const userRoutes = require ('./Routes/userRoutes')
+ 
 
-const app = express();
+//setting up your port
+const PORT = process.env.PORT || 8080
 
-var corsOptions = {
-  origin: "http://localhost:3000"
-};
+//assigning the variable app to express
+const app = express()
 
-app.use(cors(corsOptions));
+//middleware
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser())
 
-const db = require("./models");
-const Role = db.role;
+//synchronizing the database and forcing it to false so we dont lose data
+db.sequelize.sync({ force: true }).then(() => {
+    console.log("db has been re sync")
+})
 
-db.sequelize.sync({force: true}).then(() => {
-  console.log('Drop and Resync Db');
-  initial();
-});
-// parse requests of content-type - application/json
-app.use(bodyParser.json());
+//routes for the user API
+app.use('/api/users', userRoutes)
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Tämä on index sivu" });
-});
-
-require('./routes/auth.routes')(app);
-require('./routes/user.routes')(app);
-
-// set port, listen for requests
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
-
-function initial() {
-    Role.create({
-      id: 1,
-      name: "user"
-    });
-   
-    Role.create({
-      id: 2,
-      name: "logged"
-    });
-  }
+//listening to server connection
+app.listen(PORT, () => console.log(`Server is connected on ${PORT}`))

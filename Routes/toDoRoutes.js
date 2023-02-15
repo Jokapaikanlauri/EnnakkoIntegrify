@@ -2,16 +2,21 @@
 const express = require('express')
 const toDoAuth = require('../Middlewares/toDoAuth')
 const toDoController = require('../Controllers/toDoController')
-const {search, erase, add} = toDoController
+const {search, erase, add, modify, getList} = toDoController
 const router = express.Router()
+const { sequelize } = require('../Models')
+const db = require("../Models");
 
-//signup endpoint
-//passing the middleware function to the signup
+
+
 router.post('/todos', add)
-
 //login route
 router.post('/signin', search)
 
-router.post('/signin', erase )
+router.delete('/todos/:id', erase )
+
+router.put('/todos/:id',  modify)
+
+router.get('/todos', getList)
 
 module.exports = router

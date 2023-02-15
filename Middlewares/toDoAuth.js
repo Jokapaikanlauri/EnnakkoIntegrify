@@ -19,7 +19,6 @@ const db = require("../Models/toDoModel");
      return res.json(409).send("username already taken");
    }
 
-   //checking if email already exist
    const description = await ToDo.findOne({
      where: {
        description: req.body.description,
